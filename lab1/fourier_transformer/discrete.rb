@@ -1,40 +1,24 @@
-require 'pry'
+require_relative 'base'
 
 module FourierTransformer
-  class Discrete
+  class Discrete < Base
 
-    attr_reader :processed, :inverse
-
-    I = Complex::I
-    PI = Math::PI
-    E = 2.718281828459045
-
-    def initialize(steps, &block)
-      @steps, @signal = steps, block
-      @processed = count_processed
-      @inverse = count_inverse
-    end
-
-    def signal(value)
-      @signal.call(value).round(3)
-    end
-
-    def processed(value)
-      @processed.call(value).abs.round(3)
+    def process(value)
+      count_processed(value).abs
     end
 
     def inverse(value)
-      @inverse.call(value).abs.round(3)
+      count_inverse(value).abs
     end
 
     private
 
-    def count_processed
-      Proc.new { |k| (0...@steps).map { |m| @signal.call(m) * (E ** (-Complex::I * 2 * Math::PI * k * m / @steps)) }.reduce(&:+) / @steps }
+    def count_processed(k)
+      (0...@steps).map { |m| signal(m) * (E ** (-Complex::I * 2 * Math::PI * k * m / @steps)) }.reduce(:+) / @steps
     end
 
-    def count_inverse
-      Proc.new { |k| (0...@steps).map { |m| @processed.call(m) * (E ** (Complex::I * 2 * Math::PI * k * m / @steps)) }.reduce(&:+) }
+    def count_inverse(k)
+      (0...@steps).map { |m| process(m) * (E ** (Complex::I * 2 * Math::PI * k * m / @steps)) }.reduce(:+)
     end
   end
 end

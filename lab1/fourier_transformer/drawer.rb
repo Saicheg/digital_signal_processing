@@ -2,7 +2,7 @@ require 'gruff'
 
 module FourierTransformer
   class Drawer
-    def initialize(transformer, step=0.1, ends=30)
+    def initialize(transformer, step=0.1, ends=25.5)
       @transformer = transformer
       @step = step
       @ends = ends
@@ -10,11 +10,11 @@ module FourierTransformer
       @g.hide_dots = true
     end
 
-    def draw(title=nil, filename='untitled.png')
+    def draw(title=nil, filename='untitled.png', inverse=true)
       @g.title = "Discrete Fourier Tranform" if title
       @g.data("Function",  data)
       @g.data("Processed", processed_data)
-      @g.data("Inverse",   inverse_data)
+      @g.data("Inverse",   inverse_data) if inverse
       @g.write(filename)
     end
 
@@ -25,16 +25,20 @@ module FourierTransformer
     end
 
     def processed_data
-      iterator {|v| @transformer.processed(v) }
+      @transformer.process_batch(batch_data).map { |v| v.real}
     end
 
     def inverse_data
-      iterator {|v| @transformer.inverse(v) }
+      @transformer.inverse_batch(batch_data)
     end
 
     def iterator
-      array = []
-      (0..@ends).step(@step){|v| array << yield(v)}
+      batch_data.each_with_object([]) { |v, arr|  arr << yield(v) }
+    end
+
+    def batch_data
+      array = Array.new
+      (0..@ends).step(@step){|v| array << v}
       array
     end
 
