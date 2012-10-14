@@ -1,6 +1,6 @@
 require_relative "fourier_transformer/discrete.rb"
-require_relative "fourier_transformer/fast.rb"
 require_relative "fourier_transformer/drawer.rb"
+
 include FourierTransformer
 
 STEPS = 8
