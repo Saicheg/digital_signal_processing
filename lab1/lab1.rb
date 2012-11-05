@@ -1,5 +1,6 @@
 require_relative "fourier_transformer/discrete.rb"
 require_relative "fourier_transformer/drawer.rb"
+require_relative "fourier_transformer/fast.rb"
 
 include FourierTransformer
 
