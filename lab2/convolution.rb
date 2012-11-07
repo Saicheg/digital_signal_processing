@@ -3,7 +3,7 @@ require_relative 'extensions'
 require 'fft' # https://github.com/slowjud/FFT
 
 NUM = 128
-STEP = 0.01
+STEP = 0.1
 
 # Object initialize
 drawer = Drawer.new('Convolution', 'convolution.png')
@@ -24,7 +24,6 @@ data_fast_2 = [data_in_2, Array.new(data_in_2.size){|x| 0}].fft.to_complex
 
 data_result = data_fast_1.mul data_fast_2
 convoluted = data_result.to_fft_format.rfft
-
 
 # Drawer
 drawer.add_data "Signal 1", data_in_1.map{|v| v.round(3)}
