@@ -5,7 +5,7 @@ class DrawerSVG
   H = 600
 
   SX = 50.0
-  SY = 50.0
+  SY = 100.0
 
   attr_accessor :vis, :step
 

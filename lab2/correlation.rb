@@ -7,8 +7,9 @@ STEP = 0.1
 
 # Object initialize
 drawer = DrawerSVG.new#('Convolution', 'convolution.png')
-signal1 = Proc.new {|x| Math.cos(3*x)}
-signal2 = Proc.new {|x| Math.sin(2*x)}
+signal1 = Proc.new {|x| Math.cos(3*x) + Math.sin(2*x)}
+signal2 = Proc.new {|x| Math.cos(3*x) + Math.sin(2*x)}
+
 # signal2 = Proc.new {|x| x >= -0.5 && x <= 0.5 ? 1 : 0 } #delta
 
 # Data initialize
