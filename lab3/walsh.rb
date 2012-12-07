@@ -1,28 +1,4 @@
 class Walsh
-# if (vector.Length == 1)
-# {
-# return vector;
-# }
-# int halfSize = vector.Length / 2;
-# int[] left = new int[halfSize];
-# int[] right = new int[halfSize];
-# int[] result = new int[vector.Length];
-#
-# for (int i = 0; i < halfSize; i++)
-# {
-# left[i] = vector[i] + vector[halfSize + i];
-# right[i] = vector[i] - vector[halfSize + i];
-# }
-# int[] leftFWT = FWalshT(left);
-# int[] rightFWT = FWalshT(right);
-#
-# for (int j = 0; j < halfSize; j++)
-# {
-# result[j] = leftFWT[j];
-# result[j + halfSize] = rightFWT[j];
-# }
-#
-# return result;
 
   attr_reader :arr
 
