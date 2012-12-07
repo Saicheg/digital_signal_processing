@@ -1,39 +1,29 @@
 class Walsh
-# void wal(double[] a, int NN, bool isForward)
-#      {
-#          if (NN == 1)
-#          {
-#              if (isForward == true)
-#              {
-#                  newY[j] = a[0] / (double)N;
-#              }
-#              else
-#              {
-#                  newY[j] = a[0];
-#              }
-#              j++;
-#              return;
-#          }
+# if (vector.Length == 1)
+# {
+# return vector;
+# }
+# int halfSize = vector.Length / 2;
+# int[] left = new int[halfSize];
+# int[] right = new int[halfSize];
+# int[] result = new int[vector.Length];
+#
+# for (int i = 0; i < halfSize; i++)
+# {
+# left[i] = vector[i] + vector[halfSize + i];
+# right[i] = vector[i] - vector[halfSize + i];
+# }
+# int[] leftFWT = FWalshT(left);
+# int[] rightFWT = FWalshT(right);
+#
+# for (int j = 0; j < halfSize; j++)
+# {
+# result[j] = leftFWT[j];
+# result[j + halfSize] = rightFWT[j];
+# }
+#
+# return result;
 
-#          double[] a1 = new double[NN / 2];
-#          double[] a2 = new double[NN / 2];
-
-#          int n = NN / 2;
-#          for (int i = 0; i < NN; i++)
-#          {
-#              if (i < n)
-#              {
-#                  a1[i] = a[i + n] + a[i];
-#              }
-#              else
-#              {
-#                  a2[i - n] = a[i - n] - a[i];
-#              }
-#          }
-
-#          wal(a1, n, isForward);
-#          wal(a2, n, isForward);
-#      }
   attr_reader :arr
 
   def initialize(total)
@@ -42,14 +32,14 @@ class Walsh
     @j = 0;
   end
 
-  def transform(data, forward=true)
+  def transform(data, back=false)
     size = data.size
 
     if size == 1
-      if forward
-        @arr[@j] = data.first / @total
-      else
+      if back
         @arr[@j] = data.first
+      else
+        @arr[@j] = data.first / @total
       end
       @j += 1
       return
@@ -59,14 +49,14 @@ class Walsh
     half = size / 2
     0.upto(size-1) do |i|
      if i < half
-       data1[i] = data[i+half] + data[i]
+       data1[i] =  data[i] + data[i+half]
      else
        data2[i-half] = data[i-half] - data[i]
      end
     end
 
-    self.transform(data1, forward)
-    self.transform(data2, forward)
+    self.transform(data1, back)
+    self.transform(data2, back)
 
     self
   end
