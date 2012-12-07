@@ -47,12 +47,10 @@ class Walsh
 
     data1, data2 = [], []
     half = size / 2
-    0.upto(size-1) do |i|
-     if i < half
-       data1[i] =  data[i] + data[i+half]
-     else
-       data2[i-half] = data[i-half] - data[i]
-     end
+
+    0.upto(half-1) do |i|
+      data1[i] =  data[i] + data[i+half]
+      data2[i] =  data[i] - data[i+half]
     end
 
     self.transform(data1, back)
