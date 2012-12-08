@@ -31,18 +31,13 @@ draw_hist img
 img.negate.write 'negated.png'
 img.median_filter(2).write 'median.png'
 
-def show(file)
-  @buttons_x ||= 0
-  button file, left: @buttons_x, top: 510 do
-    fill "#{file}.png"
-    rect 0, 0, 900, 500
+Shoes.app height: 650, width: 450 do
+  @img = image 'image.png'
+  flow do
+    %w(image histogram negated median).each do |type|
+      button type do
+        @img.path = "#{type}.png"
+      end
+    end
   end
-  @buttons_x += 200
-end
-
-Shoes.app height: 600, width: 900 do
-  show 'image'
-  show 'histogram'
-  show 'negated'
-  show 'median'
 end
