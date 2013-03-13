@@ -22,14 +22,7 @@ checked = []
 #
 # Detect items
 #
-
 @detect = @bin.dup
-
-SQUARE = [[-1, 0], [-1, 1], [-1, -1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
-
-def item?(c, r)
-  SQUARE.any? { |dx, dy| @detect.pixel_color(c + dx, r + dy).intensity > MAX_INTENSITY }
-end
 
 @detect.each_pixel do |p, c, r|
   group ||= Group.new(@detect, checked)
@@ -56,11 +49,16 @@ end
 
 @detect.write 'images/detect.jpg'
 
-Shoes.app(height: 1024, width: 1280) do
+# Classify using k-medians algorythm
+
+@classify = @bin.dup
+@classify.write 'images/classify.jpg'
+
+Shoes.app(height: 600, width: 800) do
   @img = image('images/image.jpg')
 
   flow do
-    %w(image med bin detect).each do |type|
+    %w(image med bin detect classify).each do |type|
       button(type) { @img.path = "images/#{type}.jpg" }
     end
   end

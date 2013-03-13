@@ -4,7 +4,10 @@ require_relative 'random_color'
 
 class Group
   MAX_INTENSITY = 60000
-  SQUARE = [[-1, 0], [-1, 1], [-1, -1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+  SQUARE_4 = [[-1, 0], [0, -1], [0, 1], [1, 0]]
+  SQUARE_8 = [[-1, 0], [-1, 1], [-1, -1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+
+  SQUARE = SQUARE_4
 
   attr_reader :mass, :count, :p, :dots, :process_queue
 
