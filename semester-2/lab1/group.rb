@@ -9,7 +9,7 @@ class Group
 
   SQUARE = SQUARE_4
 
-  attr_reader :mass, :count, :p, :dots, :process_queue
+  attr_reader :mass, :count, :p, :comp, :dots, :process_queue
 
   def initialize(img, checked)
     @img = img
