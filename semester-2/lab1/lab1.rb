@@ -56,7 +56,7 @@ end
 
 @detect.write 'images/detect.jpg'
 
-Shoes.app(height: 500, width: 600) do
+Shoes.app(height: 1024, width: 1280) do
   @img = image('images/image.jpg')
 
   flow do

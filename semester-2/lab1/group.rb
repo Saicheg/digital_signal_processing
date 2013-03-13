@@ -83,6 +83,7 @@ class Group
     # #orientation
     @orient = Math.atan(2 * m11 / (m20 - m02)) / 2
 
+  rescue ZeroDivisionError
   end
 
   def moment(i, j)
