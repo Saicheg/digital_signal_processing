@@ -1,6 +1,7 @@
+# encoding: utf-8
 require 'RMagick'
 require 'pry'
-require_relative 'group'
+Dir[File.expand_path('../group.rb',__FILE__)].each {|f| require f}
 
 #
 # Prepare images and data
@@ -15,6 +16,8 @@ img = Magick::Image.read('images/image.jpg').first
 @bin.write 'images/bin.jpg'
 
 @groups = []
+checked = []
+2000.times { |i| checked[i] = Array.new(2000) }
 
 #
 # Detect items
@@ -29,28 +32,37 @@ def item?(c, r)
 end
 
 @detect.each_pixel do |p, c, r|
-  group ||= Group.new(@detect)
+  group ||= Group.new(@detect, checked)
 
   if group.item?(c,r)
     group.process_queue << [c,r]
     group.process
     @groups << group
-    group = Group.new(@detect)
+    group = Group.new(@detect, checked)
   end
-
-  puts "row: #{r}" if c == 0
-
+  print "." if c == 0
 end
+
+print "\n"
+
+@groups.reject!{|g| g.dots.empty?}
+
+@groups.each_with_index do |group, i|
+  color = RandomColor.get
+  puts "Группа ##{i}: #{group.info}"
+  group.dots.each { |x,y| @detect.pixel_color(x, y, color) }
+end
+
 
 @detect.write 'images/detect.jpg'
 
-# Shoes.app(height: 500, width: 600) do
-#   @img = image('images/image.jpg')
-#
-#   flow do
-#     %w(image med bin detect).each do |type|
-#       button(type) { @img.path = "images/#{type}.jpg" }
-#     end
-#   end
-#
-# end
+Shoes.app(height: 500, width: 600) do
+  @img = image('images/image.jpg')
+
+  flow do
+    %w(image med bin detect).each do |type|
+      button(type) { @img.path = "images/#{type}.jpg" }
+    end
+  end
+
+end
