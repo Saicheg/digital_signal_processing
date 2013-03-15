@@ -4,6 +4,8 @@ require 'pry'
 require 'k_means'
 [File.expand_path('../group.rb', __FILE__)].each {|f| require f}
 
+GROUPS = 5
+
 #
 # Prepare images and data
 #
@@ -54,13 +56,17 @@ end
 
 @classify = @bin.dup
 
-data = @groups.flat_map{|g| g.dots}
-kmeans = KMeans.new(data, :centroids => 2).view
-kmeans.each do |indexes|
+data = @groups.map{|g| [g.decentered*10, g.comp]}
+kmeans = KMeans.new(data, :centroids => GROUPS).view
+binding.pry
+kmeans.each do |ind|
   color = RandomColor.get
-  indexes.each do |i|
-    x,y = data[i]
-    @classify.pixel_color(x, y, color)
+  ind.each do |i|
+    comp = data[i].first
+    selected = @groups.select{|g| g.comp == comp}
+    selected.each do |group|
+      group.dots.each {|x,y| @classify.pixel_color(x, y, color) }
+    end
   end
 end
 
