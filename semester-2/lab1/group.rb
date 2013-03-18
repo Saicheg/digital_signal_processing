@@ -62,6 +62,10 @@ class Group
     str
   end
 
+  def analyzing_params
+    [self.count, self.p]
+  end
+
   private
 
   def count_metrics
