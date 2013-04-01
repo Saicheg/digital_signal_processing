@@ -2,6 +2,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.0.9)
+    distance_measures (0.0.6)
+    k_means (0.0.7)
+      distance_measures (>= 0.0.0)
     method_source (0.8.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
@@ -15,6 +18,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  k_means
   pry
   rmagick
   shoes
