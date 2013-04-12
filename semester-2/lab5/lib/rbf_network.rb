@@ -1,10 +1,11 @@
 require_relative 'neuron'
+require_relative 'rbf_cell'
 
-class MLP
+class RBFNetwork
 
   def initialize(options={})
     @input_size = options[:inputs]
-    @hidden_layers = options[:hidden_layers]
+    @rbf_cells = options[:rbf]
     @number_of_output_nodes = options[:output_nodes]
     setup_network
   end
@@ -49,7 +50,7 @@ class MLP
   end
 
   def update_output_weights(layer, layer_index, input)
-    inputs = @hidden_layers.empty? ? input : @network[-2].map {|x| x.last_output}
+    inputs = @rbf_cells.empty? ? input : @network[-2].map {|x| x.last_output}
     layer.each do |neuron|
       neuron.update_weight(inputs, 0.25)
     end
@@ -106,17 +107,15 @@ class MLP
 
   def setup_network
     @network = []
-    # Hidden Layers
-    @hidden_layers.each_with_index do |number_of_neurons, index|
-      layer = []
-      inputs = index == 0 ? @input_size : @hidden_layers[index-1].size
-      number_of_neurons.times { layer << Neuron.new(inputs) }
-      @network << layer
-    end
-    # Output layer
-    inputs = @hidden_layers.empty? ? @input_size : @hidden_layers.last
+
+    # RBF Cells
     layer = []
-    @number_of_output_nodes.times { layer << Neuron.new(inputs)}
+    @rbf_cells.size.times { |i| layer << RBFCell.new(@rbf_cells[i].flatten) }
+    @network << layer
+
+    # Output layer
+    layer = []
+    @number_of_output_nodes.times { layer << Neuron.new(@rbf_cells.count)}
     @network << layer
   end
 

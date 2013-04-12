@@ -16,14 +16,14 @@ def letter(result)
   end
 end
 
-mlp = MLP.new(:hidden_layers => [10], :output_nodes => 3, :inputs => 100)
-
 images = Dir['patterns/*.png'].each_with_object({}) do|path, hash|
   hash[path] = BinaryImage.new(Magick::Image.read(path).first)
 end
 
+rbf = RBFNetwork.new(:rbf => images.values.map(&:to_a), :output_nodes => 3, :inputs => 100)
+
 1000.times do |i|
-  errors = images.map { |file, image| mlp.train image.to_a.flatten, expected(file) }
+  errors = images.map { |file, image| rbf.train image.to_a.flatten, expected(file) }
   puts "Error after iteration #{i}:\t#{errors.max}" if i % 100 == 0
 end
 
@@ -32,7 +32,7 @@ noisy = NoisyImage.new(BinaryImage.new(Magick::Image.read("patterns/#{letter}.pn
 processing = BinaryImage.from_binary(noisy)
 processing.image.write("recognize/#{Time.now.to_i}.gif")
 
-result = mlp.feed_forward(processing.to_a.flatten)
+result = rbf.feed_forward(processing.to_a.flatten)
 
 puts "Recognized: #{letter(result)}"
 

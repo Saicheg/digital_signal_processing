@@ -18,7 +18,7 @@ class BinaryImage
   def initialize(image)
     @image = image
     pixels = @image.export_pixels(0, 0, @image.columns, @image.rows, "I")
-    @binary = pixels.map{|pixel| pixel == 65535 ? 1 : -1 }.each_slice(@image.rows).to_a
+    @binary = pixels.map{|pixel| pixel == 65535 ? 1 : 0 }.each_slice(@image.rows).to_a
   end
 
   def size
