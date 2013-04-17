@@ -7,11 +7,16 @@ class NoisyImage
   def noisy(noise)
     raise ArgumentError, 'noise should be between 0 and 1' if noise < 0 || noise > 1
 
-    inversed = noise * @image.size
+    inversed = (noise * @image.size).to_i
     noisy = @image.to_a.dup
 
-    inversed.to_i.times do
+    already = []
+
+    while(inversed!=0) do
       x, y = rand(0...@image.image.columns), rand(0...@image.image.rows)
+      next if already.include? [x,y]
+      already << [x,y]
+      inversed -= 1
       noisy[x][y] = inversed(noisy[x][y])
     end
 
@@ -21,6 +26,6 @@ class NoisyImage
   protected
 
   def inversed(point)
-    point == 1 ? 0 : 1
+    point == 1 ? -1 : 1
   end
 end
