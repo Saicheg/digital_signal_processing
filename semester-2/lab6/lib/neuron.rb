@@ -26,7 +26,7 @@ class Neuron
     @last_output = activation_function(input)
   end
 
-  def update_weight(inputs)
+  def update_weights(inputs)
     @weights.each_index do |i|
       i = i == @weights.count-1 ? -1 : i
       @weights[i+1] =  @weights[i] + BETA*(inputs[i] - @weights[i])
