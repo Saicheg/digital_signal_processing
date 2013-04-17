@@ -22,6 +22,20 @@ end
 
 som = SOMNetwork.new(:output_nodes => 3, :inputs => 100)
 
+
+
+images.each_slice(3) do |images|
+  images = images.map{|k,v| v}.map(&:to_a).map(&:flatten)
+  pattern = Array.new(images.first.count) { 0.to_f }
+  images.each do |image|
+    image.each_with_index { |v,i| pattern[i] += v }
+  end
+  pattern.map! {|v| v.to_f / images.count }
+  som.train(pattern) until som.trained?(pattern)
+end
+
+
+puts "Final check: "
 images.each do |file, image|
   klass = som.train(image.to_a.flatten)
   puts "Image #{image.name} is in group #{klass}"

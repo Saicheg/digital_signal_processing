@@ -2,6 +2,8 @@ require_relative 'neuron'
 
 class SOMNetwork
 
+  MAX_EUKLID = 0.05
+
   def initialize(options={})
     @input_size = options[:inputs]
     @number_of_output_nodes = options[:output_nodes]
@@ -19,6 +21,12 @@ class SOMNetwork
     feed_forward(input)
   end
 
+  def trained?(input)
+    detect_winner(input)
+    # puts @winner.euklid(input)
+    @winner.euklid(input) <= MAX_EUKLID
+  end
+
   def inspect
     @network
   end
@@ -29,10 +37,10 @@ class SOMNetwork
     distances = @network.map {|neuron| neuron.distance(input) }
     index = distances.index(distances.min)
     @winner = @network[index]
-    @winner.win!
   end
 
   def update_weights(input)
+    @winner.win!
     @winner.update_weights(input)
   end
 

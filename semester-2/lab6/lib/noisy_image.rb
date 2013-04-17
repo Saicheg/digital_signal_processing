@@ -21,6 +21,6 @@ class NoisyImage
   protected
 
   def inversed(point)
-    point == 1 ? -1 : 1
+    point == 1 ? 0 : 1
   end
 end

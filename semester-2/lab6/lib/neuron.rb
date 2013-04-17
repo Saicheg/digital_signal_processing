@@ -1,21 +1,26 @@
 class Neuron
 
-  BETA = 3
+  BETA = 0.15
 
   attr_reader :last_output, :weights
   attr_accessor :wins
 
   def initialize(number_of_inputs)
     @wins = 1
-    create_weights(number_of_inputs)
+    @inputs = number_of_inputs
+    create_weights
   end
 
   def distance(input)
+     euklid(input) * @wins
+  end
+
+  def euklid(input)
     distance = []
     @weights.each_index do |i|
-      distance << (input[i] - @weights[i]).abs
+      distance << ((input[i].to_f - @weights[i]) ** 2).to_f
     end
-    distance.min * @wins
+    Math.sqrt(distance.inject(:+))
   end
 
   def win!
@@ -27,9 +32,9 @@ class Neuron
   end
 
   def update_weights(inputs)
-    @weights.each_index do |i|
-      i = i == @weights.count-1 ? -1 : i
-      @weights[i+1] =  @weights[i] + BETA*(inputs[i] - @weights[i])
+    weights = @weights.dup
+    @inputs.times do |i|
+      @weights[i] =  weights[i] + BETA*(inputs[i] - weights[i])
     end
   end
 
@@ -40,15 +45,11 @@ class Neuron
   private
 
   def activation_function(input)
-    sum = 0
-    input.each_with_index do |n, index|
-      sum +=  @weights[index] * n
-    end
-    sum
+    euklid(input)
   end
 
-  def create_weights(number_of_inputs)
-    @weights = Array.new(number_of_inputs) { rand(0..1.to_f) }
+  def create_weights
+    @weights = Array.new(@inputs) { rand(0..1.to_f) }
   end
 
 end
