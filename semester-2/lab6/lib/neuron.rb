@@ -1,20 +1,35 @@
 class Neuron
 
+  BETA = 3
+
   attr_reader :last_output, :weights
-  attr_accessor :delta
+  attr_accessor :wins
 
   def initialize(number_of_inputs)
+    @wins = 1
     create_weights(number_of_inputs)
+  end
+
+  def distance(input)
+    distance = []
+    @weights.each_index do |i|
+      distance << (input[i] - @weights[i]).abs
+    end
+    distance.min * @wins
+  end
+
+  def win!
+    @wins += 1
   end
 
   def fire(input)
     @last_output = activation_function(input)
   end
 
-  def update_weight(inputs, training_rate)
-    inputs << -1  # Add the bias
+  def update_weight(inputs)
     @weights.each_index do |i|
-      @weights[i] +=  training_rate * delta * inputs[i]
+      i = i == @weights.count-1 ? -1 : i
+      @weights[i+1] =  @weights[i] + BETA*(inputs[i] - @weights[i])
     end
   end
 
@@ -27,25 +42,13 @@ class Neuron
   def activation_function(input)
     sum = 0
     input.each_with_index do |n, index|
-     # puts "index:#{index} weight: #{@weights[index]} input: #{n} input_size: #{input.size}"
       sum +=  @weights[index] * n
     end
-    sum += @weights.last * -1 #bias node
-    sigmoid_function(sum)
-  end
-
-  # g(h) = 1 / (1+exp(-B*h(j)))
-  def sigmoid_function(x)
-    1 / (1+Math.exp(-1 * (x)))
+    sum
   end
 
   def create_weights(number_of_inputs)
-    # Create random weights between 0 & 1
-    # Plus another one for the bias node
-    @weights = []
-    (number_of_inputs + 1).times do
-      @weights << (rand > 0.5 ? -rand : rand)
-    end
+    @weights = Array.new(number_of_inputs) { rand(0..1.to_f) }
   end
 
 end

@@ -24,4 +24,9 @@ class BinaryImage
   def size
     @image.columns * @image.rows
   end
+
+  def name
+    @image.inspect =~ /\/(.*)\.png/
+    $1
+  end
 end

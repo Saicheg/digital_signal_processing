@@ -20,11 +20,11 @@ images = Dir['patterns/*.png'].each_with_object({}) do|path, hash|
   hash[path] = BinaryImage.new(Magick::Image.read(path).first)
 end
 
-rbf = RBFNetwork.new(:rbf => images.values.map(&:to_a), :output_nodes => 3, :inputs => 100)
+som = SOMNetwork.new(:output_nodes => 3, :inputs => 100)
 
-1000.times do |i|
-  errors = images.map { |file, image| rbf.train image.to_a.flatten, expected(file) }
-  puts "Error after iteration #{i}:\t#{errors.max}" if i % 100 == 0
+images.each do |file, image|
+  klass = som.train(image.to_a.flatten)
+  puts "Image #{image.name} is in group #{klass}"
 end
 
 noisy = NoisyImage.new(BinaryImage.new(Magick::Image.read("patterns/#{letter}.png").first)).noisy(noise)
@@ -32,7 +32,7 @@ noisy = NoisyImage.new(BinaryImage.new(Magick::Image.read("patterns/#{letter}.pn
 processing = BinaryImage.from_binary(noisy)
 processing.image.write("recognize/#{Time.now.to_i}.gif")
 
-result = rbf.feed_forward(processing.to_a.flatten)
+result = som.feed_forward(processing.to_a.flatten)
 
-puts "Recognized: #{letter(result)}"
+puts "Recognized group: #{result}"
 
