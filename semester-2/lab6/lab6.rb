@@ -22,8 +22,6 @@ end
 
 som = SOMNetwork.new(:output_nodes => 3, :inputs => 100)
 
-
-
 images.each_slice(3) do |images|
   images = images.map{|k,v| v}.map(&:to_a).map(&:flatten)
   pattern = Array.new(images.first.count) { 0.to_f }
@@ -31,9 +29,10 @@ images.each_slice(3) do |images|
     image.each_with_index { |v,i| pattern[i] += v }
   end
   pattern.map! {|v| v.to_f / images.count }
-  som.train(pattern) until som.trained?(pattern)
+  until som.trained?(pattern)
+    som.train(pattern)
+  end
 end
-
 
 puts "Final check: "
 images.each do |file, image|

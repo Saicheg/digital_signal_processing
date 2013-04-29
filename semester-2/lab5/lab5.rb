@@ -4,6 +4,9 @@ require 'pry'
 puts 'usage: <letter> <noise>' and exit if ARGV.size < 2
 letter, noise = ARGV[0], ARGV[1].to_f
 
+errors = [1]
+ERROR = 0.005
+
 def expected(file)
   [(file =~ /V/ ? 1 : 0),(file =~ /A/ ? 1 : 0), (file =~ /L/ ? 1 : 0)]
 end
@@ -22,9 +25,11 @@ end
 
 rbf = RBFNetwork.new(:rbf => images.values.map(&:to_a), :output_nodes => 3, :inputs => 100)
 
-1000.times do |i|
+i = 0
+while errors.max >= ERROR
   errors = images.map { |file, image| rbf.train image.to_a.flatten, expected(file) }
-  puts "Error after iteration #{i}:\t#{errors.max}" if i % 100 == 0
+  puts "Error after iteration #{i}:\t#{errors.max}" if i % 10 == 0
+  i += 1
 end
 
 noisy = NoisyImage.new(BinaryImage.new(Magick::Image.read("patterns/#{letter}.png").first)).noisy(noise)

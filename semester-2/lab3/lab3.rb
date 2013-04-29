@@ -14,10 +14,14 @@ training = Hopfield::Training.new(images.map(&:to_a))
 noisy = NoisyImage.new(BinaryImage.new(Magick::Image.read("trainings/#{letter}.png").first)).noisy(noise)
 BinaryImage.from_binary(noisy).image.write('trainings/noisy.gif')
 
+counter = 300000
 network = Hopfield::Network.new(training, noisy)
-network.propagate until network.associated?
+
+until counter == 0 || network.associated?
+ network.propagate
+ counter -= 1
+end
 
 puts "Neurons propagated: " + network.runs.to_s
-
 BinaryImage.from_binary(network.state).image.write('trainings/result.gif')
 
